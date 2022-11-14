@@ -62,8 +62,7 @@ class Client:
 		else:
 			char = str(key)
 		message = f'{event}->{char}END;'
-		if not self.suppress:
-			socket_connection.send(message.encode())
+		socket_connection.send(message.encode())
 		print(key)
 
     @staticmethod
