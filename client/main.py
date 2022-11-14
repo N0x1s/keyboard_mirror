@@ -1,5 +1,6 @@
 from pynput import keyboard
 import socket
+import sys
 import os
 
 PRE_HOTKEYS = {
@@ -69,6 +70,10 @@ class Client:
 		message = f'{event}->{key}END;'
 		socket_connection.send(message.encode())
 		print(key)
+
+host = 'windows'
+if len(sys.argv) == 2:
+	host = sys.argv[1]
 
 client = Client(True, 'windows', 5000)
 client._start_client()
