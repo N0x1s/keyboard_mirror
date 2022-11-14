@@ -58,7 +58,7 @@ class Client:
     @staticmethod
     def on_press(key, socket_connection):
         if hasattr(key, 'char'):
-            char = key.char
+            char =key.char
         else:
             char = str(key)
         event = 'press'
