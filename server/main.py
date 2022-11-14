@@ -37,7 +37,7 @@ class Server:
 						event, event_data = message.split('->')
 					except:
 						breakpoint()
-					# key = event_data.strip("'")
+					key = event_data
 					if 'Key' in event_data:
 						key = getattr(Key, event_data.split('.')[-1])
 					getattr(self.controller, event)(key)

@@ -55,27 +55,24 @@ class Client:
             self.suppress = not self.suppress
             self.listener._suppress = self.suppress
 
+	@staticmethod
+	def deliver_message(socket_connection, event, key):
+		if hasattr(key, 'char'):
+			char = key.char
+		else:
+			char = str(key)
+		message = f'{event}->{char}END;'
+		if not self.suppress:
+			socket_connection.send(message.encode())
+		print(key)
+
     @staticmethod
     def on_press(key, socket_connection):
-        if hasattr(key, 'char'):
-            char =key.char
-        else:
-            char = str(key)
-        event = 'press'
-        message = f'{event}->{char}END;'
-        socket_connection.send(message.encode())
-        print(key)
+		Client.deliver_message(socket_connection, 'press', key)
 
     @staticmethod
     def on_release(key, socket_connection):
-        if hasattr(key, 'char'):
-            char = key.char
-        else:
-            char = str(key)
-        event = 'release'
-        message = f'{event}->{char}END;'
-        socket_connection.send(message.encode())
-        print(key)
+		Client.deliver_message(socket_connection, 'release', key)
 
 host = 'windows'
 if len(sys.argv) == 2:
@@ -83,36 +80,3 @@ if len(sys.argv) == 2:
 
 client = Client(True, host, 5000)
 client._start_client()
-
-# def toggel_suppress():
-#     global listener
-#     global hotkeys
-#     print('this was called :))')
-#     val = not listener._suppress
-#     if os.name != 'nt':
-#         listener.stop()
-#         hotkeys.stop()
-#         listener = keyboard.Listener(suppress=val, on_press=on_press, on_release=on_release)
-#         hotkeys = keyboard.GlobalHotKeys(PRE_HOTKEYS)
-#         hotkeys.start()
-#         listener.start()
-#         hotkeys.wait()
-#         listener.wait()
-#         hotkeys.join()
-#         listener.join()
-#     else:
-#         listener._suppress = val
-#
-# def on_press(key):
-#     lazy_debug('press', key)
-#
-# def on_release(key):
-#     lazy_debug('release', key)
-#
-#
-# listener.start()
-# hotkeys.start()
-# hotkeys.wait()
-# listener.wait()
-# hotkeys.join()
-# listener.join()
