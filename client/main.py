@@ -22,8 +22,8 @@ class Client:
 
     def _init_listener(self):
         self.listener = keyboard.Listener(suppress=self.suppress,
-        on_press= lambda key: self.on_press(key, self.socket),
-            on_release = lambda key: self.on_release(key, self.socket))
+        on_press= lambda key: self.on_press(key, self.suppress, self.socket),
+            on_release = lambda key: self.on_release(key, self.suppress, self.socket))
 
     def _init_hotkeys(self):
         PRE_HOTKEYS = {
@@ -67,12 +67,14 @@ class Client:
 		print(key)
 
     @staticmethod
-    def on_press(key, socket_connection):
-		Client.deliver_message(socket_connection, 'press', key)
+    def on_press(key, suppress, socket_connection):
+		if not suppress:
+			Client.deliver_message(socket_connection, 'press', key)
 
     @staticmethod
-    def on_release(key, socket_connection):
-		Client.deliver_message(socket_connection, 'release', key)
+    def on_release(key, suppress, socket_connection):
+		if not suppress:
+			Client.deliver_message(socket_connection, 'release', key)
 
 host = 'windows'
 if len(sys.argv) == 2:
