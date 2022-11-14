@@ -57,18 +57,18 @@ class Client:
 	@staticmethod
 	def on_press(key, socket_connection):
 		event = 'press'
-		message = f'{event}->{key}'
+		message = f'{event}->{key}END;'
 		socket_connection.send(message.encode())
 		print(key)
 
 	@staticmethod
 	def on_release(key, socket_connection):
 		event = 'release'
-		message = f'{event}->{key}'
+		message = f'{event}->{key}END;'
 		socket_connection.send(message.encode())
 		print(key)
 
-client = Client(True, '10.0.0.3', 5000)
+client = Client(True, 'windows', 5000)
 client._start_client()
 
 # def toggel_suppress():
