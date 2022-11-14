@@ -31,13 +31,13 @@ class Server:
 		while True:
 			data = client.connection.recv(1024).decode()
 			if data:
-				messages = data.split('END;')
+				messages = [item for item in data.split('END;') if item]
 				for message in messages:
 					try:
 						event, event_data = message.split('->')
 					except:
 						breakpoint()
-					key = event_data.strip("'")
+					# key = event_data.strip("'")
 					if 'Key' in event_data:
 						key = getattr(Key, event_data.split('.')[-1])
 					getattr(self.controller, event)(key)

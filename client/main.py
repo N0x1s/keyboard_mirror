@@ -56,6 +56,7 @@ class Client:
 
 	@staticmethod
 	def on_press(key, socket_connection):
+		key = [1:-1:]
 		event = 'press'
 		message = f'{event}->{key}END;'
 		socket_connection.send(message.encode())
@@ -63,6 +64,7 @@ class Client:
 
 	@staticmethod
 	def on_release(key, socket_connection):
+		key = [1:-1:]
 		event = 'release'
 		message = f'{event}->{key}END;'
 		socket_connection.send(message.encode())
