@@ -67,12 +67,12 @@ class Client:
 
     @staticmethod
     def on_press(key, suppress, socket_connection):
-		if not suppress:
+		if suppress:
 			Client.deliver_message(socket_connection, 'press', key)
 
     @staticmethod
     def on_release(key, suppress, socket_connection):
-		if not suppress:
+		if suppress:
 			Client.deliver_message(socket_connection, 'release', key)
 
 host = 'windows'
