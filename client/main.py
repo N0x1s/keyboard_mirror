@@ -1,4 +1,5 @@
 from pynput import keyboard
+import socket
 import os
 
 PRE_HOTKEYS = {
@@ -9,13 +10,19 @@ def lazy_debug(event, key):
 	print(f'{hotkeys.is_alive()} -> {listener._suppress} -> {event} -> {key}')
 
 class Client:
-	def __init__(self, suppress):
+	def __init__(self, suppress, host, port):
+		self.host = host
+		self.port = port
+		self.socket = socket.socket()
+		self.socket.connect((self.host, self.port))
 		self.suppress = suppress
 		self._init_listener()
 		self._init_hotkeys()
 
 	def _init_listener(self):
-		self.listener = keyboard.Listener(suppress=self.suppress, on_press=self.on_press, on_release=self.on_press)
+		self.listener = keyboard.Listener(suppress=self.suppress,
+		on_press= lambda key: self.on_press(key, self.socket),
+			on_release = lambda key: self.on_release(key, self.socket))
 
 	def _init_hotkeys(self):
 		PRE_HOTKEYS = {
@@ -48,15 +55,20 @@ class Client:
 			self.listener._suppress = self.suppress
 
 	@staticmethod
-	def on_press(key):
+	def on_press(key, socket_connection):
+		event = 'press'
+		message = f'{event}->{key}'
+		socket_connection.send(message.encode())
 		print(key)
 
 	@staticmethod
-	def on_release(key):
+	def on_release(key, socket_connection):
+		event = 'release'
+		message = f'{event}->{key}'
+		socket_connection.send(message.encode())
 		print(key)
 
-
-client = Client(True)
+client = Client(True, 'windows', 5000)
 client._start_client()
 
 # def toggel_suppress():
