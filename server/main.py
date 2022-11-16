@@ -1,5 +1,8 @@
 import socket
+import logging
 from pynput.keyboard import Key, Controller
+
+logging.basicConfig(level=logging.WARNING, filename='app.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
 
 class ClientConnection:
 	def __init__(self, connection, address):
@@ -35,12 +38,18 @@ class Server:
 				for message in messages:
 					try:
 						event, event_data = message.split('->')
-					except:
-						breakpoint()
+					except Exception as e:
+						logging.warning(f"{e} -> {data}")
 					key = event_data
 					if 'Key' in event_data:
-						key = getattr(Key, event_data.split('.')[-1])
-					getattr(self.controller, event)(key)
+						try:
+							key = getattr(Key, event_data.split('.')[-1])
+						except Exception as e:
+							logging.warning(f"{e} -> {data}")
+					try:
+						getattr(self.controller, event)(key)
+					except Exception as e:
+						logging.warning(f"{e} -> {data}")
 					print(message)
 
 def server_program():
