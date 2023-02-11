@@ -1,3 +1,4 @@
+import sys
 import socket
 import logging
 from pynput.keyboard import Key, Controller
@@ -52,12 +53,17 @@ class Server:
 						logging.warning(f"{e} -> {data}")
 					print(message)
 
-def server_program():
-	server = Server('0.0.0.0', 5000)
+def server_program(listen_on, port):
+	server = Server(listen_on, port)
 	server.listen()
 	client = server.accept_client()
 	server.receive_commands(client)
 
+if len(sys.argv) < 3:
+    print(f'usage: {sys.argv[0]} [bind_address] [port]')
+    exit(1)
 
-if __name__ == '__main__':
-    server_program()
+bind_address = sys.argv[1]
+port = int(sys.argv[2])
+
+server_program(bind_address, port)

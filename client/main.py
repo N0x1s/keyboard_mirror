@@ -34,8 +34,8 @@ class Client:
     def _start_client(self):
         self.listener.start()
         self.hotkeys.start()
-        self.listener.wait()
-        self.hotkeys.wait()
+        #self.listener.wait()
+        #self.hotkeys.wait()
         self.listener.join()
         self.hotkeys.join()
 
@@ -55,29 +55,32 @@ class Client:
             self.suppress = not self.suppress
             self.listener._suppress = self.suppress
 
-	@staticmethod
-	def deliver_message(socket_connection, event, key):
-		if hasattr(key, 'char'):
-			char = key.char
-		else:
-			char = str(key)
-		message = f'{event}->{char}END;'
-		socket_connection.send(message.encode())
-		print(key)
+    @staticmethod
+    def deliver_message(socket_connection, event, key):
+        if hasattr(key, 'char'):
+            char = key.char
+        else:
+            char = str(key)
+        message = f'{event}->{char}END;'
+        socket_connection.send(message.encode())
+        print(key)
 
     @staticmethod
     def on_press(key, suppress, socket_connection):
-		if not suppress:
-			Client.deliver_message(socket_connection, 'press', key)
+        if not suppress:
+            Client.deliver_message(socket_connection, 'press', key)
 
     @staticmethod
     def on_release(key, suppress, socket_connection):
-		if not suppress:
-			Client.deliver_message(socket_connection, 'release', key)
+        if not suppress:
+            Client.deliver_message(socket_connection, 'release', key)
 
-host = 'windows'
-if len(sys.argv) == 2:
-    host = sys.argv[1]
+if len(sys.argv) < 3:
+    print(f'usage: {sys.argv[0]} [server_ip] [port]')
+    exit(1)
 
-client = Client(True, host, 5000)
+host = sys.argv[1]
+port = int(sys.argv[2])
+
+client = Client(True, host, port)
 client._start_client()
